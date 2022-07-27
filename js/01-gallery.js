@@ -3,17 +3,27 @@ console.log(galleryItems);
 
 const imageContainer = document.querySelector('.gallery');
 const imagesMarkup = createGalleryFn(galleryItems);
-const basicLightboxMarkup = basicLightbox.create(imagesMarkup);
+const instance = basicLightbox.create(`<img class="modal-img" src="" />`, {
+  onShow: instance => {
+    window.addEventListener('keydown', onEscClick);
+  },
+  onClose: instance => {
+    window.removeEventListener('keydown', onEscClick);
+  }
+});
 
 imageContainer.insertAdjacentHTML('beforeend', imagesMarkup);
 imageContainer.addEventListener('click', onOpenImageModal);
 
 function onOpenImageModal(event) {
-  if (!event.target.classList.contains('gallery__image')) {
+  event.preventDefault();
+
+  if (event.target.nodeName !== 'IMG') {
     return;
   }
 
-  basicLightboxMarkup.show();
+  instance.element().querySelector('img').src = event.target.dataset.source;
+  instance.show();
 };
 
 function createGalleryFn(images) {
@@ -30,32 +40,9 @@ function createGalleryFn(images) {
       .join('');
 };
 
-// function createModalFn(images) {
-//   return images
-//     .map(({ preview, original, description }) => {
-//       return `
-//         <div class="modal">
-//         <img
-//       class="gallery__image"
-//       src="${preview}"
-//       data-source="${original}"
-//       alt="${description}"
-//     />
-//     </div>
-// `;
-//     })
-//     .join('');
-// }
-
-// import * as basicLightbox from 'basiclightbox';
-
-// const instance = basicLightbox.create(`
-    // <div class="modal">
-    //     <p>
-    //         Your first lightbox with just a few lines of code.
-    //         Yes, it's really that simple.
-    //     </p>
-    // </div>
-// `);
-
-// instance.show();
+function onEscClick(event) {
+  if (event.code === 'Escape') {
+    instance.close();
+    return;
+  }
+}
