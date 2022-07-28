@@ -6,7 +6,7 @@ const imagesMarkup = createGalleryFn(galleryItems);
 imageContainer.insertAdjacentHTML('beforeend', imagesMarkup);
 imageContainer.addEventListener('click', onOpenImageModal);
 
-let gallery = new SimpleLightbox('.gallery a');
+let gallery = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
 
 function onOpenImageModal(event) {
   event.preventDefault();
@@ -14,21 +14,6 @@ function onOpenImageModal(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-
-  // gallery.on('show.simplelightbox', function () {
-  // });
-
-  gallery.on('captionsData', function () {
-    gallery.captionsData = event.target.alt;
-  }); 
-
-  gallery.on('captionsDelay', function () {
-    gallery.captionsDelay = 250;
-  });
-
-  gallery.on('captionPosition', function () {
-    gallery.captionPosition = 'bottom';
-  }); 
    
 }
 
